@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF--8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EchoDiary: AI Voice Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'background': '#F5F5F3',
+              'surface': '#FFFFFF',
+              'primary': '#7D9AAB',
+              'primary-hover': '#6A8494',
+              'primary-light': '#F0F3F5',
+              'secondary': '#B8A293',
+              'accent': '#A4A792',
+              'danger': '#C47A7A',
+              'danger-hover': '#B26B6B',
+              'text-primary': '#4B4946',
+              'text-secondary': '#8A8784',
+              'border-color': '#EAE8E4',
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            boxShadow: {
+              'subtle': '0 2px 4px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.04)',
+              'card': '0 4px 12px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03)',
+              'card-hover': '0 8px 24px rgba(0, 0, 0, 0.07), 0 4px 12px rgba(0, 0, 0, 0.05)',
+              'focus-ring': '0 0 0 4px rgba(125, 154, 171, 0.3)',
+              'pulse-ring': '0 0 0 0 rgba(125, 154, 171, 0.7)',
+            },
+            borderRadius: {
+              'xl': '1rem',
+              '2xl': '1.5rem',
+            },
+            keyframes: {
+              'fadeIn': {
+                '0%': { opacity: 0, transform: 'translateY(10px)' },
+                '100%': { opacity: 1, transform: 'translateY(0)' },
+              },
+              'pulse-glow': {
+                '0%, 100%': { boxShadow: '0 0 0 0 rgba(125, 154, 171, 0.4)' },
+                '70%': { boxShadow: '0 0 0 20px rgba(125, 154, 171, 0)' },
+              },
+              'breathing-ring': {
+                '0%': { transform: 'scale(0.95)', opacity: 0.7 },
+                '70%': { transform: 'scale(1.1)', opacity: 1 },
+                '100%': { transform: 'scale(0.95)', opacity: 0.7 },
+              },
+              'subtle-pulse': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.02)' },
+              },
+              'joyful-pulse': {
+                '0%, 100%': { transform: 'scale(1)', filter: 'brightness(1)' },
+                '50%': { transform: 'scale(1.05)', filter: 'brightness(1.1)' },
+              },
+              'content-glow': {
+                '0%, 100%': { opacity: 0.8 },
+                '50%': { opacity: 1 },
+              },
+              'stressed-jitter': {
+                '0%, 100%': { transform: 'translateX(0)' },
+                '25%': { transform: 'translateX(-1px) rotate(-0.5deg)' },
+                '75%': { transform: 'translateX(1px) rotate(0.5deg)' },
+              },
+              'sad-fade': {
+                '0%, 100%': { opacity: 0.7 },
+                '50%': { opacity: 0.5 },
+              },
+              'reflective-swirl': {
+                '0%': { opacity: 0.7, transform: 'rotate(0deg) scale(1)'},
+                '50%': { opacity: 1, transform: 'rotate(180deg) scale(1.05)'},
+                '100%': { opacity: 0.7, transform: 'rotate(360deg) scale(1)'},
+              }
+            },
+            animation: {
+              'fadeIn': 'fadeIn 0.5s ease-in-out',
+              'pulse-glow': 'pulse-glow 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1)',
+              'breathing-ring': 'breathing-ring 3s ease-in-out infinite',
+              'subtle-pulse': 'subtle-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'joyful-pulse': 'joyful-pulse 2s ease-in-out infinite',
+              'content-glow': 'content-glow 3s ease-in-out infinite',
+              'stressed-jitter': 'stressed-jitter 0.4s ease-in-out infinite',
+              'sad-fade': 'sad-fade 4s ease-in-out infinite',
+              'reflective-swirl': 'reflective-swirl 8s ease-in-out infinite',
+            },
+          },
+        },
+      }
+    </script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.3.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-background font-sans">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

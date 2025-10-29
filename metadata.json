@@ -1,0 +1,7 @@
+{
+  "name": "EchoDiary: AI Voice Journal",
+  "description": "EchoDiary is your personal AI voice journal companion. Simply speak your thoughts, and the AI will listen, respond, and automatically organize your day into a journal with mood analysis, event summaries, and life insights. It's journaling, redefined as a natural conversation.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
