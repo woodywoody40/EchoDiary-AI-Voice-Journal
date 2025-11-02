@@ -2,6 +2,8 @@ import React from 'react';
 import { AIPersonality, Mood } from '../types';
 import { Avatar } from './Avatar';
 import { translatePersonality, personalityDetails } from '../utils/localization';
+import { useInstallPrompt } from '../hooks/useInstallPrompt';
+import { InstallIcon } from './icons/Icons';
 
 
 interface SettingsProps {
@@ -13,12 +15,13 @@ interface SettingsProps {
 }
 
 export const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, currentPersonality, setPersonality, onManageApiKey }) => {
+    const { isInstallable, triggerInstall } = useInstallPrompt();
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center animate-fadeIn" style={{ animationDuration: '0.3s' }} onClick={onClose}>
             <div className="bg-surface rounded-2xl shadow-card w-full max-w-md p-6 m-4 flex flex-col divide-y divide-border-color" onClick={e => e.stopPropagation()}>
-                <div className="pb-4">
+                <div className="pb-6">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl font-bold text-text-primary">設定</h2>
                         <button onClick={onClose} className="text-text-secondary hover:text-text-primary p-1 rounded-full hover:bg-gray-100">
@@ -47,7 +50,7 @@ export const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, currentPers
                         </div>
                     </div>
                 </div>
-                <div className="pt-6">
+                <div className="py-6">
                      <h3 className="text-lg font-semibold text-text-primary">API 金鑰</h3>
                      <p className="text-sm text-text-secondary mt-2 mb-4">您的 Google AI API 金鑰已安全儲存在您的瀏覽器中。</p>
                      <button 
@@ -57,6 +60,19 @@ export const Settings: React.FC<SettingsProps> = ({ isOpen, onClose, currentPers
                         管理 API 金鑰
                     </button>
                 </div>
+                 {isInstallable && (
+                    <div className="pt-6">
+                        <h3 className="text-lg font-semibold text-text-primary">應用程式安裝</h3>
+                        <p className="text-sm text-text-secondary mt-2 mb-4">將 EchoDiary 安裝到您的裝置上，以便快速存取和離線使用。</p>
+                        <button 
+                            onClick={triggerInstall}
+                            className="w-full flex items-center justify-center gap-2 text-center bg-accent text-white font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200"
+                        >
+                            <InstallIcon />
+                            安裝應用程式
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

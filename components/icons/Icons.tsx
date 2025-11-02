@@ -24,3 +24,4 @@ export const ConversationIcon: React.FC = () => <span className="material-symbol
 export const JournalIcon: React.FC = () => <span className="material-symbols-outlined">book</span>;
 export const DashboardIcon: React.FC = () => <span className="material-symbols-outlined">monitoring</span>;
 export const SettingsIcon: React.FC = () => <span className="material-symbols-outlined">settings</span>;
+export const InstallIcon: React.FC = () => <span className="material-symbols-outlined">download</span>;
