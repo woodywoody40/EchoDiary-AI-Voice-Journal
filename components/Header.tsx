@@ -7,7 +7,10 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onSettingsClick }) => {
     return (
-        <header className="bg-surface/80 backdrop-blur-lg shadow-subtle sticky top-0 z-20 border-b border-border-color">
+        <header 
+            className="bg-surface/80 backdrop-blur-lg shadow-subtle sticky top-0 z-20 border-b border-border-color"
+            style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        >
             <nav className="container mx-auto px-4 sm:px-6 md:px-8 py-3 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">

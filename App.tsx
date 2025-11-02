@@ -64,7 +64,10 @@ const App: React.FC = () => {
       <Header 
         onSettingsClick={() => setIsSettingsOpen(true)} 
       />
-      <main className="flex-grow container mx-auto p-4 sm:p-6 md:p-8 pb-24">
+      <main 
+        className="flex-grow container mx-auto p-4 sm:p-6 md:p-8 pb-24"
+        style={{ paddingBottom: 'calc(6rem + env(safe-area-inset-bottom))' }}
+      >
         <div key={currentView} className="animate-fadeIn h-full">
           {renderView()}
         </div>

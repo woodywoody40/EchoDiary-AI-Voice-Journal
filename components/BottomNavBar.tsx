@@ -29,7 +29,13 @@ const NavItem: React.FC<{
 
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({ currentView, setCurrentView }) => {
     return (
-        <nav className="fixed bottom-0 left-0 right-0 h-16 bg-surface/90 backdrop-blur-lg border-t border-border-color z-20 flex justify-around items-center shadow-md">
+        <nav 
+            className="fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-border-color z-20 flex justify-around items-center shadow-md"
+            style={{ 
+                height: 'calc(4rem + env(safe-area-inset-bottom))',
+                paddingBottom: 'env(safe-area-inset-bottom)'
+            }}
+        >
             <NavItem view="conversation" currentView={currentView} onClick={setCurrentView} icon={<ConversationIcon />} label="對話" />
             <NavItem view="journal" currentView={currentView} onClick={setCurrentView} icon={<JournalIcon />} label="日記" />
             <NavItem view="dashboard" currentView={currentView} onClick={setCurrentView} icon={<DashboardIcon />} label="儀表板" />

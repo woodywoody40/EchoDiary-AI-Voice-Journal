@@ -2,6 +2,7 @@ const CACHE_NAME = 'echodiary-cache-v1';
 const APP_SHELL_URLS = [
     '/',
     '/index.html',
+    '/manifest.webmanifest',
     '/index.tsx',
     '/App.tsx',
     '/types.ts',
