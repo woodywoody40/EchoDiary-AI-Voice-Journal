@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoDiary Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #F5F5F3;
+        }
+        .preview {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .icon-preview {
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background: white;
+        }
+        button {
+            background: #7D9AAB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #6A8494;
+        }
+        .info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>EchoDiary PWA Icon Generator</h1>
+
+    <div class="info">
+        <h2>說明</h2>
+        <p>這個工具會生成EchoDiary所需的PWA圖標。點擊下方按鈕下載圖標，然後將它們放到專案根目錄。</p>
+    </div>
+
+    <div class="preview">
+        <div class="icon-preview">
+            <h3>192x192</h3>
+            <canvas id="icon192" width="192" height="192"></canvas>
+            <br>
+            <button onclick="downloadIcon('icon192', 'icon-192.png')">下載 icon-192.png</button>
+        </div>
+        <div class="icon-preview">
+            <h3>512x512</h3>
+            <canvas id="icon512" width="512" height="512"></canvas>
+            <br>
+            <button onclick="downloadIcon('icon512', 'icon-512.png')">下載 icon-512.png</button>
+        </div>
+        <div class="icon-preview">
+            <h3>512x512 (Maskable)</h3>
+            <canvas id="maskable" width="512" height="512"></canvas>
+            <br>
+            <button onclick="downloadIcon('maskable', 'maskable-icon.png')">下載 maskable-icon.png</button>
+        </div>
+    </div>
+
+    <div class="info">
+        <button onclick="generateAll()" style="font-size: 18px; padding: 15px 30px;">生成所有圖標</button>
+    </div>
+
+    <script>
+        // SVG path from the original logo
+        const iconPath = 'M2 12a9 9 0 1 1 4.96 8.045l-3.385.907a1.25 1.25 0 0 1-1.531-1.531l.908-3.389A8.966 8.966 0 0 1 2 12Zm4.788-3.204a2.755 2.755 0 0 0 .01 3.868l3.923 3.963a.414.414 0 0 0 .59 0l3.902-3.94a2.755 2.755 0 0 0-.01-3.867a2.69 2.69 0 0 0-3.835-.01l-.372.378l-.378-.382a2.689 2.689 0 0 0-3.83-.01Zm3.48 13.178A8.978 8.978 0 0 0 17 25a8.965 8.965 0 0 0 4.04-.955l3.385.907a1.25 1.25 0 0 0 1.531-1.531l-.908-3.388a9.004 9.004 0 0 0-5.122-12.546a9.95 9.95 0 0 1 .749 1.973A7.498 7.498 0 0 1 24.5 16c0 1.3-.33 2.52-.91 3.585a.75.75 0 0 0-.067.553l.872 3.253l-3.25-.871a.75.75 0 0 0-.554.066A7.463 7.463 0 0 1 17 23.5a7.468 7.468 0 0 1-4.623-1.594a10.085 10.085 0 0 1-2.109.068Z';
+
+        function drawIcon(canvasId, size, isMaskable = false) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+
+            // Background
+            if (isMaskable) {
+                // Maskable icons need safe zone padding (10%)
+                ctx.fillStyle = '#7D9AAB';
+                ctx.fillRect(0, 0, size, size);
+            } else {
+                ctx.fillStyle = '#7D9AAB';
+                ctx.fillRect(0, 0, size, size);
+            }
+
+            // Calculate scaling and positioning
+            const originalSize = 28; // Original SVG viewBox size
+            const padding = isMaskable ? size * 0.2 : size * 0.15;
+            const iconSize = size - (padding * 2);
+            const scale = iconSize / originalSize;
+
+            // Create SVG path and draw it
+            ctx.save();
+            ctx.translate(padding, padding);
+            ctx.scale(scale, scale);
+
+            // Draw the icon
+            const path = new Path2D(iconPath);
+            ctx.fillStyle = 'white';
+            ctx.fill(path);
+
+            ctx.restore();
+        }
+
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const url = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = url;
+            link.click();
+        }
+
+        function generateAll() {
+            drawIcon('icon192', 192, false);
+            drawIcon('icon512', 512, false);
+            drawIcon('maskable', 512, true);
+            alert('所有圖標已生成！請點擊各個下載按鈕來下載圖標文件。');
+        }
+
+        // Generate icons on page load
+        window.onload = generateAll;
+    </script>
+</body>
+</html>
