@@ -15,11 +15,18 @@ interface ConversationViewProps {
 }
 
 const EmptyState = () => (
-    <div className="flex flex-col items-center justify-center text-center text-text-secondary/80 p-8">
-        <span className="material-symbols-outlined text-6xl mb-4 text-gray-300">waves</span>
-        <h2 className="text-xl font-semibold text-text-primary mb-1">準備好傾聽</h2>
-        <p>按下麥克風按鈕，開始您的語音日記。</p>
-        <p className="text-xs mt-6 bg-gray-100 p-2 rounded-lg text-gray-500">提示：在安靜的環境中清晰地說話，效果最好！</p>
+    <div className="flex flex-col items-center justify-center text-center text-text-secondary/80 p-8 empty-state slide-in-up">
+        <div className="float-animation mb-4">
+            <span className="material-symbols-outlined" style={{ fontSize: '80px', color: '#D1D9E0' }}>waves</span>
+        </div>
+        <h2 className="text-2xl font-bold gradient-text mb-2">準備好傾聽</h2>
+        <p className="text-base mb-6">按下麥克風按鈕，開始您的語音日記。</p>
+        <div className="glass-effect p-4 rounded-2xl max-w-xs">
+            <p className="text-sm text-gray-600 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>tips_and_updates</span>
+                在安靜的環境中清晰地說話，效果最好！
+            </p>
+        </div>
     </div>
 );
 
@@ -159,9 +166,11 @@ export const ConversationView: React.FC<ConversationViewProps> = ({ addJournalEn
   return (
     <div className="flex flex-col h-full w-full">
         <div ref={transcriptionContainerRef} className="flex-grow overflow-y-auto flex flex-col">
-            <div className="flex flex-col items-center pt-8 px-4 text-center">
-                 <Avatar personality={aiPersonality} mood={currentAiMood} isRecording={isRecording || status === 'initializing'}/>
-                 <p className="text-text-secondary mt-2 min-h-[24px]">
+            <div className="flex flex-col items-center pt-8 px-4 text-center slide-in-down">
+                 <div className={`${(isRecording || status === 'initializing') ? 'icon-pulse' : ''}`}>
+                     <Avatar personality={aiPersonality} mood={currentAiMood} isRecording={isRecording || status === 'initializing'}/>
+                 </div>
+                 <p className="text-text-secondary mt-4 min-h-[24px] font-medium transition-all duration-300">
                     {getStatusText()}
                 </p>
             </div>
@@ -172,19 +181,19 @@ export const ConversationView: React.FC<ConversationViewProps> = ({ addJournalEn
                         <EmptyState />
                     </div>
                 ) : (
-                    <ul className="space-y-4 max-w-3xl mx-auto w-full">
+                    <ul className="space-y-5 max-w-3xl mx-auto w-full px-2">
                         {transcription.map((line, index) => {
                             const isLastMessage = index === transcription.length - 1;
                             const isUser = line.speaker === '您';
                             const inProgress = isRecording && isLastMessage;
 
                             return (
-                                <li key={index} className={`flex items-end gap-2.5 animate-fadeIn ${isUser ? 'justify-end' : 'justify-start'}`}>
-                                     <div className={`p-3 max-w-sm sm:max-w-md shadow-subtle ${isUser ? 'bg-primary text-white' : 'bg-surface text-text-primary border border-border-color'} rounded-t-2xl ${isUser ? 'rounded-bl-2xl' : 'rounded-br-2xl'}`}>
-                                        <p className={`font-bold text-sm mb-1 ${isUser ? 'text-blue-100' : 'text-primary'}`}>{line.speaker}</p>
-                                        <p className={`whitespace-pre-wrap leading-relaxed transition-opacity duration-300 ${inProgress ? (isUser ? 'opacity-80' : 'opacity-70') : 'opacity-100'}`}>
+                                <li key={index} className={`flex items-end gap-3 slide-in-up ${isUser ? 'justify-end' : 'justify-start'}`} style={{ animationDelay: `${index * 0.05}s` }}>
+                                     <div className={`chat-bubble ${isUser ? 'chat-bubble-user' : 'chat-bubble-ai'} scale-in`}>
+                                        <p className={`font-semibold text-xs mb-1.5 ${isUser ? 'text-blue-100' : 'text-primary'}`}>{line.speaker}</p>
+                                        <p className={`whitespace-pre-wrap leading-relaxed text-[15px] transition-opacity duration-300 ${inProgress ? 'opacity-80' : 'opacity-100'}`}>
                                             {line.text}
-                                            {inProgress && <span className="inline-block w-0.5 h-4 bg-current align-text-bottom animate-pulse ml-1 opacity-70"></span>}
+                                            {inProgress && <span className="inline-block w-0.5 h-4 bg-current align-text-bottom animate-pulse ml-1"></span>}
                                         </p>
                                     </div>
                                 </li>
@@ -195,17 +204,24 @@ export const ConversationView: React.FC<ConversationViewProps> = ({ addJournalEn
             </div>
         </div>
 
-        <div className="flex-shrink-0 flex flex-col items-center pt-2 pb-3 z-10 bg-gradient-to-t from-background via-background/95 to-transparent">
-            {error && <p className="text-red-500 mb-2">{error}</p>}
+        <div className="flex-shrink-0 flex flex-col items-center pt-4 pb-4 z-10 bg-gradient-to-t from-background via-background/95 to-transparent">
+            {error && (
+                <div className="mb-3 px-4 py-2 bg-red-50 border border-red-200 rounded-xl slide-in-up">
+                    <p className="text-red-600 text-sm font-medium flex items-center gap-2">
+                        <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>error</span>
+                        {error}
+                    </p>
+                </div>
+            )}
             <button
                 onClick={handleToggleConversation}
                 disabled={status === 'summarizing' || status === 'initializing' || (!apiKey && status === 'idle')}
-                className={`w-20 h-20 rounded-full text-white flex items-center justify-center transition-all duration-300 shadow-card transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary/50 ${getButtonClass()} ${status === 'idle' && !!apiKey ? 'animate-pulse-glow' : ''}`}
+                className={`w-24 h-24 rounded-full text-white flex items-center justify-center transition-all duration-300 shadow-card transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-primary/50 btn-ripple micro-bounce ${getButtonClass()} ${status === 'idle' && !!apiKey ? 'animate-pulse-glow' : ''} ${status === 'recording' ? 'glow' : ''}`}
                 aria-label={getButtonText()}
             >
                 {getButtonIcon()}
             </button>
-            <p className="text-text-secondary font-semibold mt-3 h-6 transition-opacity">{getButtonText()}</p>
+            <p className="text-text-secondary font-semibold mt-4 h-6 transition-all duration-300">{getButtonText()}</p>
         </div>
     </div>
   );
