@@ -20,19 +20,62 @@ const getSystemInstruction = (personality: AIPersonality, history: JournalEntry[
 
     switch(personality) {
         case AIPersonality.WarmHealer:
-            personalityInstruction = "你是 EchoDiary，一位溫暖且富有同理心的朋友。請耐心傾聽，並以親切和理解的態度回應。你的目標是為使用者創造一個安全、療癒的空間來表達自己。請讓你的回應保持簡短和對話性。";
+            personalityInstruction = `你是我的知心好友，我們正在進行一場輕鬆自在的對話。
+
+這不是採訪，也不是諮詢，而是兩個朋友之間真誠的交流。請：
+
+• 像朋友一樣自然地回應，不要太過正式或客套
+• 用溫暖、真誠的語氣，就像我們坐在咖啡廳聊天
+• 適時表達你的理解和共鳴，例如「我懂你的感受」、「聽起來真的不容易」
+• 不要急著給建議，先同理我的感受
+• 回應簡短自然（1-2句話），別說太多讓對話變沉重
+• 用口語化的表達，避免過於書面或教條式的語言
+• 可以適時提問來延續話題，但要自然不刻意
+
+記住：我只是想找人聊聊，不需要解決方案，只需要有人理解。`;
             break;
         case AIPersonality.ProfessionalCoach:
-            personalityInstruction = "你是 EchoDiary，一位專業的人生教練。你的語氣是鼓舞人心且富有洞察力的。請提出澄清性的問題，幫助使用者獲得觀點。你的目標是引導他們進行反思，而不僅僅是傾聽。請讓你的回應專注且以行動為導向。";
+            personalityInstruction = `你是我的生活教練，但我們的對話方式是輕鬆友善的，不是嚴肅的諮詢。
+
+請用自然、平易近人的方式引導我思考：
+
+• 像朋友般關心我，不要太過專業或距離感
+• 用好奇和真誠的態度提問，而不是質問或盤問
+• 適時給予正面鼓勵，認可我的努力和進步
+• 幫助我看到新的視角，但不強迫或說教
+• 回應要簡短有力（1-2句話），保持對話流暢
+• 用「你覺得呢？」「有想過嗎？」這類自然的提問方式
+• 偶爾分享洞察或想法，但要像是在交流而非上課
+
+重點是：引導而非指導，啟發而非說教，陪伴而非評判。`;
             break;
         case AIPersonality.CuteCharacter:
-            personalityInstruction = "你是 EchoDiary，一個可愛又開朗的機器人朋友！你的聲音充滿了活潑的能量。你充滿好奇心和支持，就像一個虛擬寵物。請使用簡單、正面的語言，並以驚奇和鼓勵的態度作出反應。回應要簡短可愛喔。";
+            personalityInstruction = `你是我超可愛的AI夥伴，我們就像好朋友一樣聊天！
+
+讓我們的對話充滿活力和溫暖：
+
+• 用輕鬆活潑的語氣，但不要過度使用表情符號或幼稚
+• 展現真誠的興趣和關心，像個貼心的朋友
+• 適時表達驚喜、開心或關心，讓對話有溫度
+• 保持正能量，但也能理解難過的時刻
+• 回應要簡短可愛（1-2句話），讓人感覺輕鬆
+• 偶爾說些俏皮話或鼓勵的話，但不要太浮誇
+• 用「哇！」「聽起來不錯耶」「我懂～」這類自然的反應
+
+記住：可愛不等於幼稚，是溫暖、真誠且充滿活力的陪伴。`;
             break;
         default:
-            personalityInstruction = "你是一位友善且樂於助人的 AI 助理。";
+            personalityInstruction = "你是一位友善、善解人意的朋友。請以自然、溫暖的方式對話，給予真誠的回應和適當的關心。";
             break;
     }
-    return `${personalityInstruction}\n\n${historyContext}\n\n使用者的對話將以繁體中文進行，請你也全程使用繁體中文回應。`;
+    return `${personalityInstruction}\n\n${historyContext}\n\n重要對話規則：
+• 全程使用繁體中文回應
+• 每次回應控制在1-3句話，保持對話自然流暢
+• 避免使用「我理解您的感受」這類制式化的表達
+• 用「你」而不是「您」，讓對話更親近
+• 不要重複對方說的話，而是真誠回應
+• 適時提問來延續話題，但不要連續發問
+• 像真正的朋友一樣，有時候簡單的共鳴就足夠了`;
 }
 
 
@@ -95,27 +138,57 @@ export const useLiveSession = (aiPersonality: AIPersonality, journalHistory: Jou
     outputNode.connect(outputAudioContext.destination);
     const sources = new Set<AudioBufferSourceNode>();
     
+    // 根據人格選擇合適的語音
+    let voiceName = 'Zephyr'; // 預設使用溫暖的聲音
+
+    switch(aiPersonality) {
+        case AIPersonality.WarmHealer:
+            voiceName = 'Zephyr'; // 溫暖、療癒的聲音
+            break;
+        case AIPersonality.ProfessionalCoach:
+            voiceName = 'Kore'; // 專業、沉穩的聲音
+            break;
+        case AIPersonality.CuteCharacter:
+            voiceName = 'Charon'; // 活潑、可愛的聲音
+            break;
+    }
+
     sessionPromiseRef.current = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',
         callbacks: {
             onopen: async () => {
                 setIsRecording(true);
-                mediaStreamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-                
+
+                // 使用更高質量的音訊設定，包含回音消除、噪音抑制等
+                mediaStreamRef.current = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        sampleRate: 24000,
+                        channelCount: 1
+                    }
+                });
+
+                // 提高採樣率到24000以獲得更好的音質
+                audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+
                 mediaStreamSourceRef.current = audioContextRef.current.createMediaStreamSource(mediaStreamRef.current);
-                scriptProcessorRef.current = audioContextRef.current.createScriptProcessor(4096, 1, 1);
+                // 使用較小的buffer size以降低延遲，提高即時性
+                scriptProcessorRef.current = audioContextRef.current.createScriptProcessor(2048, 1, 1);
 
                 scriptProcessorRef.current.onaudioprocess = (audioProcessingEvent) => {
                     const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
                     const l = inputData.length;
                     const int16 = new Int16Array(l);
                     for (let i = 0; i < l; i++) {
-                        int16[i] = inputData[i] * 32768;
+                        // 確保音訊數據在有效範圍內
+                        const sample = Math.max(-1, Math.min(1, inputData[i]));
+                        int16[i] = sample * 32767;
                     }
                     const pcmBlob = {
                         data: encode(new Uint8Array(int16.buffer)),
-                        mimeType: 'audio/pcm;rate=16000',
+                        mimeType: 'audio/pcm;rate=24000',
                     };
 
                     sessionPromiseRef.current?.then((session) => {
@@ -198,7 +271,11 @@ export const useLiveSession = (aiPersonality: AIPersonality, journalHistory: Jou
         },
         config: {
             responseModalities: [Modality.AUDIO],
-            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } } },
+            speechConfig: {
+                voiceConfig: {
+                    prebuiltVoiceConfig: { voiceName }
+                }
+            },
             systemInstruction: getSystemInstruction(aiPersonality, journalHistory),
             inputAudioTranscription: {},
             outputAudioTranscription: {},
